@@ -1,0 +1,6 @@
+{
+  "name": "Password Guru Game",
+  "description": "เกมทดสอบความแข็งแกร่งของรหัสผ่าน 5 ด่าน ออกแบบมาเป็นพิเศษสำหรับหน้าจอสัมผัส เพื่อหา Password Guru ตัวจริง",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
