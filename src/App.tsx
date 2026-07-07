@@ -269,7 +269,7 @@ export default function App() {
                 {(['easy', 'medium', 'hard'] as const).map((diff) => {
                   const isActive = difficulty === diff;
                   const label = diff === 'easy' ? 'ระดับต้น' : diff === 'medium' ? 'ระดับกลาง' : 'ระดับสูง';
-                  const title = diff === 'easy' ? '30 วินาทีทุกข้อ' : diff === 'medium' ? '10 - 3 วินาที' : '5 - 3 วินาที';
+                  const title = diff === 'easy' ? '20 วินาทีทุกข้อ' : diff === 'medium' ? '10 - 3 วินาที' : '5 - 3 วินาที';
                   return (
                     <button
                       key={diff}
@@ -377,7 +377,7 @@ export default function App() {
                   <div className="flex items-start space-x-2.5">
                     <span className="flex-shrink-0 w-5 h-5 rounded bg-amber-100 text-amber-800 border border-amber-200/60 flex items-center justify-center font-bold text-xs font-mono">02</span>
                     {difficulty === 'easy' ? (
-                      <span>มีเวลาให้คิด <span className="font-semibold text-amber-700">30 วินาทีเท่ากันทุกข้อ</span> ไม่รีบเร่ง ตอบได้อย่างละเอียด</span>
+                      <span>มีเวลาให้คิด <span className="font-semibold text-amber-700">20 วินาทีเท่ากันทุกข้อ</span> ไม่รีบเร่ง ตอบได้อย่างละเอียด</span>
                     ) : (
                       <span>ระบบจะบีบเวลาลงเรื่อยๆ จาก <span className="font-semibold text-amber-700">{difficulty === 'medium' ? '10' : '5'} วินาที ลงไปจนถึง 3 วินาที</span> ในด่านสุดท้าย</span>
                     )}

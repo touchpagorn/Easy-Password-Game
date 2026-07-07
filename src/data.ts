@@ -376,7 +376,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 4,
       timeLimit: 4,
       focusTopic: "การหลีกเลี่ยงลวดลายซ้ำซ้อน (Pattern Analysis)",
-      questionText: "รหัสผ่านที่ดูซับซ้อนแต่มักมีลวดลายที่โปรแกรมแฮกจับทางได้ง่าย ข้อใดไร้รูปแบบซ้ำซ้อนอย่างแท้จริง?",
+      questionText: "ข้อใดไม่มีรูปแบบซ้ำ ๆ ของการตั้ง Password",
       options: [
         {
           id: "4-a1",
@@ -547,7 +547,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
   // Apply difficulty time limit overrides
   levelsList.forEach(level => {
     if (difficulty === 'easy') {
-      level.timeLimit = 30;
+      level.timeLimit = 20;
     } else if (difficulty === 'hard') {
       if (level.id === 1) level.timeLimit = 5;
       else if (level.id === 2) level.timeLimit = 4.5;
