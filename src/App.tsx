@@ -260,7 +260,7 @@ export default function App() {
                       title={title}
                       className={`px-2 py-1 text-[10px] font-mono rounded-sm transition-all duration-150 cursor-pointer ${
                         isActive
-                          ? 'bg-amber-500 text-white font-bold shadow-sm'
+                          ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
                           : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/40'
                       }`}
                     >
@@ -373,7 +373,7 @@ export default function App() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleStartGame}
-                className="px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm tracking-widest uppercase flex items-center space-x-2 cursor-pointer shadow-md border border-amber-600/10 focus:outline-none"
+                className="px-8 py-4 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl font-bold text-sm tracking-widest uppercase flex items-center space-x-2 cursor-pointer shadow-md border border-amber-600/10 focus:outline-none"
                 id="btn-start-game"
               >
                 <Power size={18} />
@@ -576,7 +576,7 @@ export default function App() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={handleNextStep}
-                    className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-emerald-600/10"
+                    className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-slate-950 rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-emerald-600/10"
                     id="btn-next"
                   >
                     <span>{currentLevelIndex === activeLevels.length - 1 ? 'PROCEED TO SUMMARY' : 'NEXT STAGE (ไปต่อด่านถัดไป)'}</span>
@@ -587,7 +587,7 @@ export default function App() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={handleNextStep}
-                    className="w-full py-4 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-rose-600/10"
+                    className="w-full py-4 bg-rose-500 hover:bg-rose-600 text-slate-950 rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-rose-600/10"
                     id="btn-fail-next"
                   >
                     <span>ANALYZE RECONSTRUCTION (ดูข้อผิดพลาดเพื่อแก้ไข)</span>
@@ -676,7 +676,7 @@ export default function App() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleRestart}
-                className="w-full max-w-sm py-4 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold text-sm flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-rose-600/10"
+                className="w-full max-w-sm py-4 bg-rose-500 hover:bg-rose-600 text-slate-950 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-rose-600/10"
                 id="btn-retry"
               >
                 <RefreshCw size={16} />
@@ -772,7 +772,7 @@ export default function App() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleRestart}
-                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-emerald-600/10"
+                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-slate-950 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-emerald-600/10"
                   id="btn-victory-restart"
                 >
                   <RotateCcw size={16} />
