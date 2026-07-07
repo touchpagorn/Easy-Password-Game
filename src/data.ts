@@ -137,7 +137,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 1,
       timeLimit: 10,
       focusTopic: "การเลี่ยงปุ่มเรียงพยัญชนะ (Standard Key Walks)",
-      questionText: "รหัสผ่านใดที่หลีกเลี่ยงรูปแบบลำดับการกดแป้นพิมพ์ และมีความปลอดภัยที่สุดในกลุ่มนี้?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "1-b1",
@@ -239,7 +239,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 2,
       timeLimit: 8,
       focusTopic: "โครงสร้าง Passphrase ที่ยอดเยี่ยม",
-      questionText: "ประโยครหัสผ่าน (Passphrase) แบบใดที่แฮกเกอร์ใช้ฐานข้อมูลคำศัพท์ทั่วไปเจาะระบบได้ยากที่สุด?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "2-b1",
@@ -286,7 +286,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 3,
       timeLimit: 6,
       focusTopic: "การแทนที่ตัวอักษรยอดฮิต (Leet Speak Substitutions)",
-      questionText: "แฮกเกอร์รู้ทันสูตรสลับอักษร (เช่น s เป็น 5, o เป็น 0) รหัสผ่านใดที่หลีกเลี่ยงจุดอ่อนนี้ได้ดีที่สุด?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "3-a1",
@@ -329,7 +329,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 3,
       timeLimit: 6,
       focusTopic: "การหลีกเลี่ยงข้อมูลส่วนตัว (Personal Data Leak)",
-      questionText: "รหัสผ่านข้อใดที่ลดความเสี่ยงจากการแฮกด้วยข้อมูลส่วนตัว (Social Engineering) ได้ปลอดภัยที่สุด?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "3-b1",
@@ -419,7 +419,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 4,
       timeLimit: 4,
       focusTopic: "ความสุ่มไร้ลวดลาย (Entropy & True Randomness)",
-      questionText: "ข้อใดไม่มีรูปแบบการเรียงลำดับที่เป็นระเบียบ คาดเดาไม่ได้เลยแม้จะใช้คอมพิวเตอร์วิเคราะห์เชิงลึก?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "4-b1",
@@ -466,7 +466,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 5,
       timeLimit: 3,
       focusTopic: "รหัสผ่านสุ่มปลอดภัยสูงสุด (High-Entropy)",
-      questionText: "ด่านสุดท้ายด้วยเวลาเพียง 3 วินาที! รหัสผ่านข้อใดแข็งแกร่งที่สุดจากการโจมตีทุกประเภท?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "5-a1",
@@ -509,7 +509,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 5,
       timeLimit: 3,
       focusTopic: "ระบบความปลอดภัยต้านทาน Supercomputer",
-      questionText: "3 วินาทีสุดท้ายเพื่อรับใบประกาศกูรู! รหัสใดทนทานต่อการถอดรหัสเชิงคำนวณขั้นสูงของระบบควอนตัม?",
+      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
       options: [
         {
           id: "5-b1",
@@ -547,11 +547,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
   // Apply difficulty time limit overrides
   levelsList.forEach(level => {
     if (difficulty === 'easy') {
-      if (level.id === 1) level.timeLimit = 25;
-      else if (level.id === 2) level.timeLimit = 20;
-      else if (level.id === 3) level.timeLimit = 15;
-      else if (level.id === 4) level.timeLimit = 10;
-      else if (level.id === 5) level.timeLimit = 5;
+      level.timeLimit = 30;
     } else if (difficulty === 'hard') {
       if (level.id === 1) level.timeLimit = 5;
       else if (level.id === 2) level.timeLimit = 4.5;

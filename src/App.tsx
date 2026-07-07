@@ -229,8 +229,8 @@ export default function App() {
           
           {/* Brand Logo & Sub-info */}
           <div className="flex items-center space-x-3.5 self-start sm:self-auto">
-            <div className="p-2 bg-amber-500/10 border border-amber-200 rounded-lg text-amber-600 shadow-xs">
-              <Fingerprint size={22} className="animate-pulse" />
+            <div className="p-2 bg-amber-500/10 border border-amber-200 rounded-lg shadow-xs">
+              <Fingerprint size={22} className="text-amber-600 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
@@ -329,8 +329,8 @@ export default function App() {
               <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-amber-500" />
               <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-amber-500" />
 
-              <div className="w-20 h-20 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center text-amber-600 mb-6 shadow-sm">
-                <ShieldCheck size={42} className="animate-pulse" />
+              <div className="w-20 h-20 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <ShieldCheck size={42} className="text-amber-600 animate-pulse" />
               </div>
               
               <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-wide mb-3 uppercase">
@@ -612,8 +612,8 @@ export default function App() {
               <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-rose-400" />
               <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-rose-400" />
 
-              <div className="w-20 h-20 bg-rose-50 border border-rose-200 rounded-full flex items-center justify-center text-rose-500 shadow-xs animate-pulse">
-                <ShieldAlert size={42} />
+              <div className="w-20 h-20 bg-rose-50 border border-rose-200 rounded-full flex items-center justify-center shadow-xs animate-pulse">
+                <ShieldAlert size={42} className="text-rose-500" />
               </div>
 
               <div className="space-y-2">
@@ -704,8 +704,8 @@ export default function App() {
               <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-emerald-500" />
               <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-emerald-500" />
 
-              <div className="w-24 h-24 bg-emerald-50 border-2 border-emerald-500 rounded-full flex items-center justify-center text-emerald-600 shadow-md animate-bounce mt-3">
-                <Trophy size={52} className="stroke-[1.5]" />
+              <div className="w-24 h-24 bg-emerald-50 border-2 border-emerald-500 rounded-full flex items-center justify-center shadow-md animate-bounce mt-3">
+                <Trophy size={52} className="stroke-[1.5] text-emerald-600" />
               </div>
 
               <div className="space-y-2">
