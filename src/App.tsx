@@ -161,22 +161,39 @@ export default function App() {
       ? currentLevel.options.find(o => o.id === selectedOptionId)?.isCorrect 
       : false;
 
-    if (!lastAnswerWasCorrect) {
-      // If the answer was wrong (or timed out), they lose! Must restart.
-      setGameState('game-over');
-      return;
-    }
-
-    // If correct, check if there are more levels
-    if (currentLevelIndex < activeLevels.length - 1) {
-      const nextIndex = currentLevelIndex + 1;
-      setCurrentLevelIndex(nextIndex);
-      setSelectedOptionId(null);
-      setTimeLeft(activeLevels[nextIndex].timeLimit);
-      setGameState('playing');
+    if (difficulty === 'easy') {
+      // In easy difficulty, they can continue regardless of correct/incorrect answers!
+      if (currentLevelIndex < activeLevels.length - 1) {
+        const nextIndex = currentLevelIndex + 1;
+        setCurrentLevelIndex(nextIndex);
+        setSelectedOptionId(null);
+        setTimeLeft(activeLevels[nextIndex].timeLimit);
+        setGameState('playing');
+      } else {
+        // Checked at the very end of 5 levels: need at least 3 out of 5 correct to win
+        if (score >= 3) {
+          setGameState('victory');
+        } else {
+          setGameState('game-over');
+        }
+      }
     } else {
-      // Completed all 5 levels correctly!
-      setGameState('victory');
+      // Normal/Hard rules: must get everything correct
+      if (!lastAnswerWasCorrect) {
+        setGameState('game-over');
+        return;
+      }
+
+      if (currentLevelIndex < activeLevels.length - 1) {
+        const nextIndex = currentLevelIndex + 1;
+        setCurrentLevelIndex(nextIndex);
+        setSelectedOptionId(null);
+        setTimeLeft(activeLevels[nextIndex].timeLimit);
+        setGameState('playing');
+      } else {
+        // Completed all 5 levels correctly!
+        setGameState('victory');
+      }
     }
   };
 
@@ -252,7 +269,7 @@ export default function App() {
                 {(['easy', 'medium', 'hard'] as const).map((diff) => {
                   const isActive = difficulty === diff;
                   const label = diff === 'easy' ? 'ระดับต้น' : diff === 'medium' ? 'ระดับกลาง' : 'ระดับสูง';
-                  const title = diff === 'easy' ? '25 - 5 วินาที' : diff === 'medium' ? '10 - 3 วินาที' : '5 - 3 วินาที';
+                  const title = diff === 'easy' ? '30 วินาทีทุกข้อ' : diff === 'medium' ? '10 - 3 วินาที' : '5 - 3 วินาที';
                   return (
                     <button
                       key={diff}
@@ -351,15 +368,27 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm text-slate-600 font-sans">
                   <div className="flex items-start space-x-2.5">
                     <span className="flex-shrink-0 w-5 h-5 rounded bg-amber-100 text-amber-800 border border-amber-200/60 flex items-center justify-center font-bold text-xs font-mono">01</span>
-                    <span>ตอบให้ถูกต้อง <span className="font-semibold text-amber-700">ต่อเนื่องกันทั้ง 5 ด่าน</span> เพื่ออัปเกรดเป็น Password Guru</span>
+                    {difficulty === 'easy' ? (
+                      <span>ตอบให้ถูกต้อง <span className="font-semibold text-amber-700">อย่างน้อย 3 ใน 5 ข้อ</span> เพื่อผ่านเป็น Password Guru</span>
+                    ) : (
+                      <span>ตอบให้ถูกต้อง <span className="font-semibold text-amber-700">ต่อเนื่องกันทั้ง 5 ด่าน</span> เพื่ออัปเกรดเป็น Password Guru</span>
+                    )}
                   </div>
                   <div className="flex items-start space-x-2.5">
                     <span className="flex-shrink-0 w-5 h-5 rounded bg-amber-100 text-amber-800 border border-amber-200/60 flex items-center justify-center font-bold text-xs font-mono">02</span>
-                    <span>ระบบจะบีบเวลาลงเรื่อยๆ จาก <span className="font-semibold text-amber-700">{difficulty === 'easy' ? '25' : difficulty === 'medium' ? '10' : '5'} วินาที ลงไปจนถึง {difficulty === 'easy' ? '5' : '3'} วินาที</span> ในด่านสุดท้าย</span>
+                    {difficulty === 'easy' ? (
+                      <span>มีเวลาให้คิด <span className="font-semibold text-amber-700">30 วินาทีเท่ากันทุกข้อ</span> ไม่รีบเร่ง ตอบได้อย่างละเอียด</span>
+                    ) : (
+                      <span>ระบบจะบีบเวลาลงเรื่อยๆ จาก <span className="font-semibold text-amber-700">{difficulty === 'medium' ? '10' : '5'} วินาที ลงไปจนถึง 3 วินาที</span> ในด่านสุดท้าย</span>
+                    )}
                   </div>
                   <div className="flex items-start space-x-2.5">
                     <span className="flex-shrink-0 w-5 h-5 rounded bg-amber-100 text-amber-800 border border-amber-200/60 flex items-center justify-center font-bold text-xs font-mono">03</span>
-                    <span>ตอบผิดเพียงจุดเดียว หรือปล่อยให้หมดเวลา = <span className="font-semibold text-rose-600">ระบบจะปิดล็อกและล้มเหลวทันที!</span></span>
+                    {difficulty === 'easy' ? (
+                      <span>หากตอบผิดหรือปล่อยให้หมดเวลา <span className="font-semibold text-amber-700">ระบบจะไม่ตัดสิทธิ์</span> แต่ให้ผ่านไปด่านความมั่นคงต่อไปได้</span>
+                    ) : (
+                      <span>ตอบผิดเพียงจุดเดียว หรือปล่อยให้หมดเวลา = <span className="font-semibold text-rose-600">ระบบจะปิดล็อกและล้มเหลวทันที!</span></span>
+                    )}
                   </div>
                   <div className="flex items-start space-x-2.5">
                     <span className="flex-shrink-0 w-5 h-5 rounded bg-amber-100 text-amber-800 border border-amber-200/60 flex items-center justify-center font-bold text-xs font-mono">04</span>
@@ -397,6 +426,11 @@ export default function App() {
                 <div className="inline-block px-3 py-1 bg-amber-500/10 border border-amber-200 text-amber-700 rounded-md text-xs font-bold tracking-widest uppercase">
                   ด่าน {currentLevelIndex + 1} / 5: {currentLevel.focusTopic}
                 </div>
+                {difficulty === 'easy' && (
+                  <div className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest font-mono">
+                    [ TARGET: สะสมให้ได้ 3 คะแนน &mdash; ปัจจุบันได้: {score} คะแนน ]
+                  </div>
+                )}
                 <h2 className="text-lg md:text-xl font-bold text-slate-900 max-w-3xl mx-auto leading-relaxed px-2 font-sans">
                   {currentLevel.questionText}
                 </h2>
@@ -579,7 +613,7 @@ export default function App() {
                     className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-slate-950 rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-emerald-600/10"
                     id="btn-next"
                   >
-                    <span>{currentLevelIndex === activeLevels.length - 1 ? 'PROCEED TO SUMMARY' : 'NEXT STAGE (ไปต่อด่านถัดไป)'}</span>
+                    <span>{currentLevelIndex === activeLevels.length - 1 ? 'PROCEED TO SUMMARY (ดูผลสรุปการประเมิน)' : 'NEXT STAGE (ไปต่อด่านถัดไป)'}</span>
                     <ChevronRight size={18} />
                   </motion.button>
                 ) : (
@@ -587,10 +621,18 @@ export default function App() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={handleNextStep}
-                    className="w-full py-4 bg-rose-500 hover:bg-rose-600 text-slate-950 rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md border border-rose-600/10"
+                    className={`w-full py-4 rounded-xl font-bold text-base flex items-center justify-center space-x-2 cursor-pointer shadow-md ${
+                      difficulty === 'easy'
+                        ? 'bg-amber-500 hover:bg-amber-600 border border-amber-600/10 text-slate-950'
+                        : 'bg-rose-500 hover:bg-rose-600 border border-rose-600/10 text-slate-950'
+                    }`}
                     id="btn-fail-next"
                   >
-                    <span>ANALYZE RECONSTRUCTION (ดูข้อผิดพลาดเพื่อแก้ไข)</span>
+                    <span>
+                      {difficulty === 'easy'
+                        ? (currentLevelIndex === activeLevels.length - 1 ? 'PROCEED TO SUMMARY (ดูผลสรุปการประเมิน)' : 'NEXT STAGE (ไปต่อด่านถัดไป)')
+                        : 'ANALYZE RECONSTRUCTION (ดูข้อผิดพลาดเพื่อแก้ไข)'}
+                    </span>
                     <ChevronRight size={18} />
                   </motion.button>
                 )}
@@ -621,7 +663,11 @@ export default function App() {
                   ACCESS DENIED: BREACH DETECTED
                 </h2>
                 <p className="text-xs md:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-sans">
-                  ระบบรักษาความปลอดภัยล้มเหลวใน <span className="font-bold text-rose-600 underline font-mono">ด่านที่ {currentLevelIndex + 1}</span> แฮกเกอร์และซอฟต์แวร์เดารหัสสามารถเจาะบัญชีของคุณสำเร็จในพริบตา!
+                  {difficulty === 'easy' ? (
+                    <>ระบบรักษาความปลอดภัยล้มเหลวเนื่องจากคุณเก็บคะแนนได้เพียง <span className="font-bold text-rose-600 underline font-mono">{score} จาก 5 คะแนน</span> (ระดับต้นต้องการอย่างน้อย 3 คะแนนเพื่อประเมินผ่านเป็น Password Guru)</>
+                  ) : (
+                    <>ระบบรักษาความปลอดภัยล้มเหลวใน <span className="font-bold text-rose-600 underline font-mono font-mono">ด่านที่ {currentLevelIndex + 1}</span> แฮกเกอร์และซอฟต์แวร์เดารหัสสามารถเจาะบัญชีของคุณสำเร็จในพริบตา!</>
+                  )}
                 </p>
               </div>
 
@@ -644,21 +690,22 @@ export default function App() {
                 {/* Grid of level results */}
                 <div className="mt-5 pt-4 border-t border-slate-200 flex justify-center space-x-2">
                   {levelsCompleted.map((isSuccess, idx) => {
-                    const isCurrentFailed = idx === currentLevelIndex;
+                    const wasPlayed = difficulty === 'easy' || idx <= currentLevelIndex;
+                    const isFailed = wasPlayed && !isSuccess;
                     return (
                       <div 
                         key={idx} 
                         className={`w-12 py-2 rounded flex flex-col items-center justify-center text-xs font-mono font-bold border ${
                           isSuccess 
                             ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                            : isCurrentFailed 
+                            : isFailed 
                               ? "bg-rose-50 text-rose-600 border-rose-300 animate-pulse" 
                               : "bg-slate-100 text-slate-400 border-slate-200"
                         }`}
                       >
                         <span>#{idx + 1}</span>
                         <span className="mt-1">
-                          {isSuccess ? <Check size={11} className="stroke-[3]" /> : isCurrentFailed ? <X size={11} className="stroke-[3]" /> : "—"}
+                          {isSuccess ? <Check size={11} className="stroke-[3]" /> : isFailed ? <X size={11} className="stroke-[3]" /> : "—"}
                         </span>
                       </div>
                     );
@@ -716,7 +763,11 @@ export default function App() {
                   คุณคือ PASSWORD GURU!
                 </h2>
                 <p className="text-xs md:text-sm text-slate-600 max-w-lg mx-auto leading-relaxed font-sans">
-                  ยินดีด้วย! คุณได้รับการรับรองความรู้ขั้นสูงสุดในการเลือกและปกป้องรหัสผ่าน คุณสามารถแยกแยะความแตกต่างเพื่อสร้างระดับการเข้ารหัสที่สมบูรณ์แบบได้ครบทั้ง 5 ด่าน ภายใต้ความกดดันเวลาจำกัดขั้นวิกฤต!
+                  {difficulty === 'easy' ? (
+                    <>ยินดีด้วย! คุณได้รับการรับรองความรู้ขั้นสูงสุดในการเลือกและปกป้องรหัสผ่าน คุณสามารถผ่านด่านการทดสอบระดับต้นได้อย่างปลอดภัยด้วยคะแนนสะสม <span className="font-bold text-emerald-600 underline font-mono">{score} จาก 5 คะแนน</span> (ระดับต้นต้องการอย่างน้อย 3 คะแนน)!</>
+                  ) : (
+                    <>ยินดีด้วย! คุณได้รับการรับรองความรู้ขั้นสูงสุดในการเลือกและปกป้องรหัสผ่าน คุณสามารถแยกแยะความแตกต่างเพื่อสร้างระดับการเข้ารหัสที่สมบูรณ์แบบได้ครบทั้ง 5 ด่าน ภายใต้ความกดดันเวลาจำกัดขั้นวิกฤต!</>
+                  )}
                 </p>
               </div>
 
@@ -727,8 +778,10 @@ export default function App() {
                 </h3>
                 <div className="grid grid-cols-3 gap-2 text-center divide-x divide-slate-200">
                   <div>
-                    <span className="text-xl md:text-2xl font-bold text-slate-800 block">5 / 5</span>
-                    <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block">ผ่านครบทุกด่าน</span>
+                    <span className="text-xl md:text-2xl font-bold text-slate-800 block">{score} / 5</span>
+                    <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block">
+                      {difficulty === 'easy' ? 'คะแนนที่สะสมได้' : 'ผ่านครบทุกด่าน'}
+                    </span>
                   </div>
                   <div>
                     <span className="text-xl md:text-2xl font-bold text-sky-600 block">
