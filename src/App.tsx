@@ -242,7 +242,7 @@ export default function App() {
 
       {/* Header Navigation */}
       <header className="border-b border-slate-200 bg-white/85 backdrop-blur-md px-4 md:px-8 py-4 sticky top-0 z-40 shadow-xs">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 space-y-4 sm:space-y-0">
           
           {/* Brand Logo & Sub-info */}
           <div className="flex items-center space-x-3.5 self-start sm:self-auto">
@@ -261,9 +261,9 @@ export default function App() {
           </div>
           
           {/* Header Actions & Info */}
-          <div className="flex flex-wrap items-center justify-end gap-3.5 self-end sm:self-auto">
+          <div className="flex flex-wrap items-center justify-end gap-3.5 self-end sm:self-auto space-x-2">
             {/* Difficulty Selector */}
-            <div className="flex flex-col items-end gap-1">
+            <div className="flex flex-col items-end gap-1 space-y-1">
               <span className="text-[8px] text-slate-500 uppercase tracking-widest font-bold leading-none">Speed Level / เลือกระดับความเร็ว</span>
               <div className="flex items-center bg-slate-100 border border-slate-200 rounded-md p-0.5">
                 {(['easy', 'medium', 'hard'] as const).map((diff) => {
@@ -294,7 +294,7 @@ export default function App() {
                 <div className="text-center hidden lg:block">
                   <div className="text-[9px] text-slate-500 uppercase tracking-wider font-bold">Progress</div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 space-x-1">
                   {activeLevels.map((lvl, index) => {
                     let indicatorStyle = 'bg-slate-200 border-slate-300';
                     if (index === currentLevelIndex) {
@@ -464,13 +464,13 @@ export default function App() {
               </div>
  
               {/* Touchscreen Option Grid (Clean option cards with nice metadata labels) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4" id="options-container">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 -m-1.5" id="options-container">
                 {currentLevel.options.map((option, idx) => (
                   <motion.button
                     key={option.id}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => handleOptionSelect(option)}
-                    className="p-6 bg-white border border-slate-200 rounded-xl hover:bg-amber-50/25 hover:border-amber-500 transition-all text-left relative group overflow-hidden cursor-pointer flex flex-col justify-between min-h-[120px] focus:outline-none shadow-xs hover:shadow-md"
+                    className="m-1.5 p-6 bg-white border border-slate-200 rounded-xl hover:bg-amber-50/25 hover:border-amber-500 transition-all text-left relative group overflow-hidden cursor-pointer flex flex-col justify-between min-h-[120px] focus:outline-none shadow-xs hover:shadow-md"
                   >
                     {/* Identification header flag */}
                     <span className="absolute top-0 left-0 bg-slate-100 text-[9px] px-2.5 py-1 uppercase font-bold text-slate-600 border-r border-b border-slate-200/80 tracking-wider">
@@ -840,9 +840,9 @@ export default function App() {
 
       {/* Footer Area */}
       <footer className="border-t border-slate-200 bg-white px-4 md:px-8 py-5 mt-auto text-slate-500">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between text-[11px] font-mono gap-3">
-          <div className="flex flex-wrap justify-center items-center gap-3">
-            <span className="flex items-center gap-1">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between text-[11px] font-mono gap-3 space-y-3 md:space-y-0">
+          <div className="flex flex-wrap justify-center items-center gap-3 space-x-3">
+            <span className="flex items-center gap-1 space-x-1">
               <Terminal size={12} className="text-amber-600" /> TERMINAL: TTY-SYSTEM
             </span>
             <span className="w-px h-3.5 bg-slate-200 hidden md:inline"></span>

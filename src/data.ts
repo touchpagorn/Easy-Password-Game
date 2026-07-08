@@ -279,7 +279,10 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
   if (l3Variation === 1) {
     const leetWord = `${randomElement(["P@55w0rd!", "S3cr3t!", "L33tSp34k!", "Ad@m!n1"])}${randomDigits(2)}`;
     const standardPhrase = "Th1sIs@Str0ngPw";
-    const correctVal = `${randomElement(randomWords)}_${randomElement(randomWords).toUpperCase()}_${randomDigits(2)}${randomElement(specialChars)}`;
+    const w1 = randomElement(randomWords);
+    let w2 = randomElement(randomWords);
+    while (w2 === w1) w2 = randomElement(randomWords);
+    const correctVal = `${w1}_${w2.toUpperCase()}_${randomDigits(2)}${randomElement(specialChars)}`;
     const keyWalk = randomElement(keyboardWalks);
 
     levelsList.push({
@@ -322,7 +325,12 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
   } else {
     const personalName = `${randomElement(commonNames)}${randomElement(brandWords)}${randomYear()}!`;
     const carYear = `${randomElement(brandWords)}Camry${randomYear()}`;
-    const correctVal = `${randomElement(randomWords)}_${randomElement(randomWords)}_${randomElement(randomWords)}_${randomDigits(2)}*`;
+    const w1 = randomElement(randomWords);
+    let w2 = randomElement(randomWords);
+    while (w2 === w1) w2 = randomElement(randomWords);
+    let w3 = randomElement(randomWords);
+    while (w3 === w1 || w3 === w2) w3 = randomElement(randomWords);
+    const correctVal = `${w1}_${w2}_${w3}_${randomDigits(2)}*`;
     const petName = `MyPet${randomElement(["Rover", "Buddy", "Max", "Luna"])}123!`;
 
     levelsList.push({
