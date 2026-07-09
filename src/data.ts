@@ -555,7 +555,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
   // Apply difficulty time limit overrides
   levelsList.forEach(level => {
     if (difficulty === 'easy') {
-      level.timeLimit = 20;
+      level.timeLimit = 15;
     } else if (difficulty === 'hard') {
       if (level.id === 1) level.timeLimit = 5;
       else if (level.id === 2) level.timeLimit = 4.5;
