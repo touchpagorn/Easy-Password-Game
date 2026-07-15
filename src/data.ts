@@ -66,10 +66,13 @@ function generateHighEntropy(length: number): string {
  * Durstenfeld shuffle utility to randomize options
  */
 function shuffleArray<T>(array: T[]): T[] {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+  let arr = [...array];
+  // Perform multiple shuffling passes to ensure extra randomness
+  for (let pass = 0; pass < 3; pass++) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
   }
   return arr;
 }
@@ -94,7 +97,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 1,
       timeLimit: 10,
       focusTopic: "ประเภทตัวอักษรที่หลากหลาย (Character Variety)",
-      questionText: "รหัสผ่านใดต่อไปนี้ที่ 'แข็งแกร่งที่สุด' ในการรับมือกับการเดาสุ่มแบบพื้นฐาน?",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "1-a1",
@@ -137,7 +140,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 1,
       timeLimit: 10,
       focusTopic: "การเลี่ยงปุ่มเรียงพยัญชนะ (Standard Key Walks)",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "1-b1",
@@ -191,7 +194,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 2,
       timeLimit: 8,
       focusTopic: "ความยาวรหัสผ่าน (Password Length vs Complexity)",
-      questionText: "ระหว่างรหัสผ่านที่พยายามทำให้ซับซ้อนแต่สั้น กับรหัสผ่านที่เป็นประโยคยาว รหัสไหนปลอดภัยกว่ากัน?",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "2-a1",
@@ -239,7 +242,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 2,
       timeLimit: 8,
       focusTopic: "โครงสร้าง Passphrase ที่ยอดเยี่ยม",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "2-b1",
@@ -289,7 +292,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 3,
       timeLimit: 6,
       focusTopic: "การแทนที่ตัวอักษรยอดฮิต (Leet Speak Substitutions)",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "3-a1",
@@ -337,7 +340,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 3,
       timeLimit: 6,
       focusTopic: "การหลีกเลี่ยงข้อมูลส่วนตัว (Personal Data Leak)",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "3-b1",
@@ -384,7 +387,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 4,
       timeLimit: 4,
       focusTopic: "การหลีกเลี่ยงลวดลายซ้ำซ้อน (Pattern Analysis)",
-      questionText: "ข้อใดไม่มีรูปแบบซ้ำ ๆ ของการตั้ง Password",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "4-a1",
@@ -427,7 +430,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 4,
       timeLimit: 4,
       focusTopic: "ความสุ่มไร้ลวดลาย (Entropy & True Randomness)",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "4-b1",
@@ -474,7 +477,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 5,
       timeLimit: 3,
       focusTopic: "รหัสผ่านสุ่มปลอดภัยสูงสุด (High-Entropy)",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "5-a1",
@@ -517,7 +520,7 @@ export function generateRandomGame(difficulty: Difficulty = 'medium'): Level[] {
       id: 5,
       timeLimit: 3,
       focusTopic: "ระบบความปลอดภัยต้านทาน Supercomputer",
-      questionText: "รหัสผ่านไหน ปลอดภัยสุด",
+      questionText: "Password ไหน เดายากที่สุด",
       options: [
         {
           id: "5-b1",
