@@ -53,17 +53,73 @@ export default function App() {
   const [levelsCompleted, setLevelsCompleted] = useState<boolean[]>(new Array(5).fill(false));
   const [timeTakenPerLevel, setTimeTakenPerLevel] = useState<number[]>([]);
 
+  // System Configuration States (loads from localStorage or defaults)
+  const [easyTimeLimits, setEasyTimeLimits] = useState<number[]>(() => {
+    const saved = localStorage.getItem('password-guru-easy-times');
+    return saved ? JSON.parse(saved) : [15, 15, 15, 15, 15];
+  });
+  const [mediumTimeLimits, setMediumTimeLimits] = useState<number[]>(() => {
+    const saved = localStorage.getItem('password-guru-medium-times');
+    return saved ? JSON.parse(saved) : [10, 8, 6, 4, 3];
+  });
+  const [hardTimeLimits, setHardTimeLimits] = useState<number[]>(() => {
+    const saved = localStorage.getItem('password-guru-hard-times');
+    return saved ? JSON.parse(saved) : [5, 4.5, 4, 3.5, 3];
+  });
+
+  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
+
+  // Temporary configuration states for editing in the modal
+  const [tempEasy, setTempEasy] = useState<number[]>([15, 15, 15, 15, 15]);
+  const [tempMedium, setTempMedium] = useState<number[]>([10, 8, 6, 4, 3]);
+  const [tempHard, setTempHard] = useState<number[]>([5, 4.5, 4, 3.5, 3]);
+
+  // Synchronize temporary states when config modal is opened
+  useEffect(() => {
+    if (isConfigOpen) {
+      setTempEasy([...easyTimeLimits]);
+      setTempMedium([...mediumTimeLimits]);
+      setTempHard([...hardTimeLimits]);
+    }
+  }, [isConfigOpen, easyTimeLimits, mediumTimeLimits, hardTimeLimits]);
+
+  // Save the custom system time limits config
+  const handleSaveConfig = (easy: number[], medium: number[], hard: number[]) => {
+    setEasyTimeLimits(easy);
+    setMediumTimeLimits(medium);
+    setHardTimeLimits(hard);
+    localStorage.setItem('password-guru-easy-times', JSON.stringify(easy));
+    localStorage.setItem('password-guru-medium-times', JSON.stringify(medium));
+    localStorage.setItem('password-guru-hard-times', JSON.stringify(hard));
+    setIsConfigOpen(false);
+
+    // Regenerate active levels if on start screen so they reflect custom configured times instantly
+    if (gameState === 'start') {
+      const times = difficulty === 'easy' ? easy : difficulty === 'medium' ? medium : hard;
+      setActiveLevels(generateRandomGame(difficulty, times));
+    }
+  };
+
+  // Helper to retrieve current difficulty custom times
+  const getCustomTimes = (diff: Difficulty) => {
+    return diff === 'easy' ? easyTimeLimits : diff === 'medium' ? mediumTimeLimits : hardTimeLimits;
+  };
+
   // Initialize random levels on first load or when difficulty changes
   useEffect(() => {
-    setActiveLevels(generateRandomGame(difficulty));
-  }, [difficulty]);
+    if (gameState === 'start') {
+      const times = getCustomTimes(difficulty);
+      setActiveLevels(generateRandomGame(difficulty, times));
+    }
+  }, [difficulty, easyTimeLimits, mediumTimeLimits, hardTimeLimits, gameState]);
 
   const currentLevel = activeLevels[currentLevelIndex] || null;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Restart entire game (regenerate game sets)
   const handleRestart = () => {
-    const newLevels = generateRandomGame(difficulty);
+    const times = getCustomTimes(difficulty);
+    const newLevels = generateRandomGame(difficulty, times);
     setActiveLevels(newLevels);
     setGameState('start');
     setCurrentLevelIndex(0);
@@ -76,7 +132,8 @@ export default function App() {
 
   // Start the game with fresh randomized questions
   const handleStartGame = () => {
-    const newLevels = generateRandomGame(difficulty);
+    const times = getCustomTimes(difficulty);
+    const newLevels = generateRandomGame(difficulty, times);
     setActiveLevels(newLevels);
     setGameState('playing');
     setCurrentLevelIndex(0);
@@ -91,7 +148,8 @@ export default function App() {
   // Change difficulty level and restart the game state
   const handleDifficultyChange = (newDifficulty: Difficulty) => {
     setDifficulty(newDifficulty);
-    const newLevels = generateRandomGame(newDifficulty);
+    const times = getCustomTimes(newDifficulty);
+    const newLevels = generateRandomGame(newDifficulty, times);
     setActiveLevels(newLevels);
     setGameState('start');
     setCurrentLevelIndex(0);
@@ -282,6 +340,23 @@ export default function App() {
                 }`}
               >
                 {theme === 'dark' ? <Sun size={14} className="stroke-[2.5]" /> : <Moon size={14} className="stroke-[2.5]" />}
+              </button>
+            </div>
+
+            {/* System Configuration Button */}
+            <div className="flex flex-col items-end gap-1 space-y-1">
+              <span className={`text-[8px] uppercase tracking-widest font-bold leading-none transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Settings / ตั้งค่าระบบ</span>
+              <button
+                onClick={() => setIsConfigOpen(true)}
+                title="เปิดแผงควบคุมตั้งเวลาแต่ละด่าน"
+                className={`p-1.5 rounded-md border flex items-center justify-center transition-all duration-150 cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-slate-900 border-slate-800 text-amber-500 hover:text-amber-400 hover:bg-slate-800/80'
+                    : 'bg-slate-100 border-slate-200 text-amber-600 hover:text-amber-700 hover:bg-slate-200/60'
+                }`}
+                id="btn-system-config"
+              >
+                <Cpu size={14} className="stroke-[2.5]" />
               </button>
             </div>
 
@@ -887,6 +962,193 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* System Configuration Modal */}
+      <AnimatePresence>
+        {isConfigOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-slate-950/60 transition-all duration-300">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", damping: 25, stiffness: 350 }}
+              className={`w-full max-w-2xl rounded-2xl border p-6 md:p-8 shadow-2xl relative overflow-hidden transition-all duration-300 ${
+                theme === 'dark' 
+                  ? 'bg-slate-900 border-slate-800 text-slate-100' 
+                  : 'bg-white border-slate-200 text-slate-800'
+              }`}
+              id="system-config-modal"
+            >
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-600 via-amber-500 to-orange-500" />
+              
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6 border-b pb-4 border-slate-500/10">
+                <div className="flex items-center space-x-3">
+                  <div className={`p-1.5 rounded bg-amber-500/10 border border-amber-500/30 ${theme === 'dark' ? 'text-amber-500' : 'text-amber-600'}`}>
+                    <Cpu size={18} />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold uppercase tracking-wider">System Config / ตั้งค่าระบบเวลา</h3>
+                    <p className={`text-[10px] uppercase font-bold ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                      Adjust Stage Countdowns (ปรับระยะเวลานับถอยหลังแต่ละด่าน)
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsConfigOpen(false)}
+                  className={`p-1.5 rounded-lg border hover:bg-slate-500/10 cursor-pointer transition-all ${
+                    theme === 'dark' ? 'border-slate-800 text-slate-400 hover:text-slate-100' : 'border-slate-200 text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Warning/Explanation Alert */}
+              <div className={`p-3.5 rounded-xl border text-xs leading-relaxed mb-6 flex items-start space-x-3 font-sans ${
+                theme === 'dark' ? 'bg-amber-500/5 border-amber-500/10 text-amber-300' : 'bg-amber-50 border-amber-100 text-amber-800'
+              }`}>
+                <Info size={16} className="flex-shrink-0 mt-0.5" />
+                <p>
+                  กำหนดเวลานับถอยหลังเป็นวินาทีสำหรับความยากแต่ละระดับใน 5 ด่าน (ระดับต้นตอบผิดได้ 3 ด่าน, ระดับกลางและระดับสูงต้องผ่านรวดเดียว). ปรับแต่งค่าความท้าทายตามความต้องการของคุณได้แบบเรียลไทม์!
+                </p>
+              </div>
+
+              {/* Body: Custom Sliders for the 3 Difficulties */}
+              <div className="space-y-6 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar font-sans">
+                
+                {/* 1. EASY DIFFICULTY SETTINGS */}
+                <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-slate-950/40 border-slate-800/60' : 'bg-slate-50 border-slate-200/80'}`}>
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-4 flex items-center font-mono">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 mr-2 animate-pulse" />
+                    EASY LEVEL (ระดับต้น) — วินาทีในแต่ละด่าน
+                  </h4>
+                  <div className="space-y-3.5">
+                    {tempEasy.map((time, idx) => (
+                      <div key={`easy-stage-${idx}`} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-bold font-mono text-slate-400 w-24">STAGE 0{idx + 1}:</span>
+                        <div className="flex-1 flex items-center space-x-3">
+                          <input
+                            type="range"
+                            min="1"
+                            max="60"
+                            step="1"
+                            value={time}
+                            onChange={(e) => {
+                              const next = [...tempEasy];
+                              next[idx] = parseInt(e.target.value);
+                              setTempEasy(next);
+                            }}
+                            className="flex-1 accent-amber-500 h-1 bg-slate-300 dark:bg-slate-700 rounded-lg cursor-pointer"
+                          />
+                          <span className="text-xs font-mono font-bold w-12 text-right">{time}s</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. MEDIUM DIFFICULTY SETTINGS */}
+                <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-slate-950/40 border-slate-800/60' : 'bg-slate-50 border-slate-200/80'}`}>
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-500 mb-4 flex items-center font-mono">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse" />
+                    MEDIUM LEVEL (ระดับกลาง) — วินาทีในแต่ละด่าน
+                  </h4>
+                  <div className="space-y-3.5">
+                    {tempMedium.map((time, idx) => (
+                      <div key={`medium-stage-${idx}`} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-bold font-mono text-slate-400 w-24">STAGE 0{idx + 1}:</span>
+                        <div className="flex-1 flex items-center space-x-3">
+                          <input
+                            type="range"
+                            min="1"
+                            max="60"
+                            step="0.5"
+                            value={time}
+                            onChange={(e) => {
+                              const next = [...tempMedium];
+                              next[idx] = parseFloat(e.target.value);
+                              setTempMedium(next);
+                            }}
+                            className="flex-1 accent-emerald-500 h-1 bg-slate-300 dark:bg-slate-700 rounded-lg cursor-pointer"
+                          />
+                          <span className="text-xs font-mono font-bold w-12 text-right">{time}s</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. HARD DIFFICULTY SETTINGS */}
+                <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-slate-950/40 border-slate-800/60' : 'bg-slate-50 border-slate-200/80'}`}>
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-4 flex items-center font-mono">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 mr-2 animate-pulse" />
+                    HARD LEVEL (ระดับสูง) — วินาทีในแต่ละด่าน
+                  </h4>
+                  <div className="space-y-3.5">
+                    {tempHard.map((time, idx) => (
+                      <div key={`hard-stage-${idx}`} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-bold font-mono text-slate-400 w-24">STAGE 0{idx + 1}:</span>
+                        <div className="flex-1 flex items-center space-x-3">
+                          <input
+                            type="range"
+                            min="0.5"
+                            max="30"
+                            step="0.5"
+                            value={time}
+                            onChange={(e) => {
+                              const next = [...tempHard];
+                              next[idx] = parseFloat(e.target.value);
+                              setTempHard(next);
+                            }}
+                            className="flex-1 accent-rose-500 h-1 bg-slate-300 dark:bg-slate-700 rounded-lg cursor-pointer"
+                          />
+                          <span className="text-xs font-mono font-bold w-12 text-right">{time}s</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Actions Footer */}
+              <div className="flex items-center justify-between mt-8 pt-4 border-t border-slate-500/10">
+                <button
+                  onClick={() => {
+                    setTempEasy([15, 15, 15, 15, 15]);
+                    setTempMedium([10, 8, 6, 4, 3]);
+                    setTempHard([5, 4.5, 4, 3.5, 3]);
+                  }}
+                  className={`px-4 py-2 text-xs font-mono font-bold uppercase border hover:bg-slate-500/10 rounded-lg transition-all cursor-pointer ${
+                    theme === 'dark' ? 'border-slate-800 text-slate-400 hover:text-slate-200' : 'border-slate-200 text-slate-600 hover:text-slate-800'
+                  }`}
+                >
+                  Reset Defaults
+                </button>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => setIsConfigOpen(false)}
+                    className={`px-4 py-2 text-xs font-mono font-bold uppercase border hover:bg-slate-500/10 rounded-lg transition-all cursor-pointer ${
+                      theme === 'dark' ? 'border-slate-800 text-slate-400 hover:text-slate-200' : 'border-slate-200 text-slate-600 hover:text-slate-800'
+                    }`}
+                  >
+                    Cancel / ยกเลิก
+                  </button>
+                  <button
+                    onClick={() => handleSaveConfig(tempEasy, tempMedium, tempHard)}
+                    className="px-5 py-2 text-xs font-mono font-extrabold uppercase bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg shadow-md transition-all cursor-pointer border border-amber-600/10"
+                  >
+                    Save Changes / บันทึก
+                  </button>
+                </div>
+              </div>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
